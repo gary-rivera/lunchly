@@ -14,7 +14,6 @@ class Customer {
     this.lastName = lastName;
     this.phone = phone;
     this.notes = notes;
-    this.fullName = `${this.firstName} ${this.lastName}`
   }
 
   /** find all customers. */
@@ -57,6 +56,34 @@ class Customer {
     return new Customer(customer);
   }
 
+    /** get a customer by name. */
+
+    static async search(firstName) {
+      const results = await db.query(
+            `SELECT id,
+                    first_name,
+                    last_name,
+                    phone,
+                    notes
+             FROM customers
+             WHERE first_name = $1`,
+          [firstName],
+      );
+  
+      const customer = results.rows;
+  
+      if (customer === undefined) {
+        const err = new Error(`No such customer: ${firstName}`);
+        err.status = 404;
+        throw err;
+      }
+      return customer;
+    }
+
+  fullName() {
+    return `${this.firstName} ${this.lastName}`
+  }
+  
   /** get all reservations for this customer. */
 
   async getReservations() {

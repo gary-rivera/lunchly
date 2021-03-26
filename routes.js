@@ -22,6 +22,14 @@ router.get("/add/", async function (req, res, next) {
   return res.render("customer_new_form.html");
 });
 
+/** Form to search for a customer. */
+
+router.get("/search/", async function (req, res, next) {
+  const firstName = req.query.firstName
+  const customers = await Customer.search(firstName)
+  return res.render("customer_list.html", customers);
+});
+
 /** Handle adding a new customer. */
 
 router.post("/add/", async function (req, res, next) {

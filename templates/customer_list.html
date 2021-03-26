@@ -5,12 +5,25 @@ content %}
 
 <h1>Customers</h1>
 
+<form action="/search/" method="GET">
+  <label for="firstName">Enter Name: </label>
+  <input name="firstName"></input>
+  <button class="btn btn-primary">Search!</button>
+</form>
+
 <ul style="column-count: 4">
-  {% for customer in customers %}
+  {% for customer of customers %}
   <li>
-    <a href="/{{ customer.id }}/">{{ customer.fullName }}</a>
+    <a href="/{{ customer.id }}/">{{ customer.fullName() }}</a>
   </li>
   {% endfor %}
 </ul>
 
+<ul style="column-count: 4">
+  {% for customer in customers %}
+  <li>
+    <a href="/{{ customer.id }}/">{{ customer.fullName() }}</a>
+  </li>
+  {% endfor %}
+</ul>
 {% endblock %}
