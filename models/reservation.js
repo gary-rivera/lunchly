@@ -39,6 +39,29 @@ class Reservation {
 
     return results.rows.map(row => new Reservation(row));
   }
+
+  async save() {
+    // if this reservation doesnt exist yet
+    if (this.id === undefined) {
+      //query the db to insert the reservation 
+      const result = await db.query(`
+        INSERT INTO reservations (customer_id, start_at, num_guests, notes)
+        VALUES ($1, $2, $3, $4)
+        RETURNING id
+      `, [this.customerId, this.startAt, this.numGuests, this.notes])
+      // initialize id from the auto generated id of table row created
+      this.id = result.rows[0].id
+    } else { // if reservation does exist update the info on it.
+      await db.query(`
+        UPDATE reservations
+        SET customer_id=$1,
+            start_at=$2,
+            num_guests=$3,
+            notes=$4
+        WHERE id = $5
+      `, [this.customerId, this.startAt, this.num_guests, this.notes])
+    }
+  }
 }
 
 
